@@ -1,0 +1,18 @@
+{
+    "name": "goxens/goxens-php",
+    "version": "0.0.1",
+    "description": "Php sdk for Goxens  sms  gateway",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Goxens\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rodriguetech",
+            "email": "rodriguet802@gmail.com"
+        }
+    ],
+    "require": {}
+}
