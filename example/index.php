@@ -27,7 +27,7 @@ var_dump($solde);
 ####################### send SMS ##############################
 
 $sender = 'Goxens'; // Valid sender name
-$number = '+229XXXXXXXX';
+$number = '+229XXXXXXXX ';
 $message = 'Bienvenue sur Goxens';
 
 $send = $goxens->sendSms($apiKey,$userUid,$number,$sender,$message);
