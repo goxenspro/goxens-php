@@ -67,6 +67,38 @@ class Goxens
     }
 
 
+    public function sendSms($apikey, $uid , $number, $sender , $msg){
+        $response = null;
+
+        try {
+            $endpoint = Constants::BASE_URL;
+
+            $response = $this->curl->request('POST', $endpoint . '/api/sendsms/'. $apikey.'/'. $uid, [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+
+                'body' => json_encode([
+                    'expediteur' => $sender,
+                    'numero' => $number,
+                    'message' => $msg,
+                ]),
+            ]);
+
+            return  $response->getBody()->getContents();
+        }catch (RequestException $e){
+            $body = ($e->getResponse()->getBody());
+
+            $errors = (json_decode((string)$body));
+
+            $errors->statusCode = $e->getResponse()->getStatusCode();
+
+            return $errors;
+        }
+
+    }
+
 
     /**
      * @return mixed
