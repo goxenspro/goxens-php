@@ -18,7 +18,7 @@ class Goxens
     // User uid
     private  $uid;
 
-    private $curl;
+    private $client;
 
 
 
@@ -31,7 +31,7 @@ class Goxens
     {
         $this->apiKey = $apiKey;
         $this->uid = $uid;
-        $this->curl = new Client();
+        $this->client = new Client();
     }
 
 
@@ -39,13 +39,13 @@ class Goxens
 
 
     public function verifySolde($apikey){
-        $response = null;
 
         try {
             $endpoint = Constants::BASE_URL ;
 
+            $uri = $endpoint . '/api/credit/'. $apikey;
 
-            $response = $this->curl->request('GET', $endpoint . '/api/credit/'. $apikey, [
+            $response = $this->client->request('GET', $uri , [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
@@ -56,11 +56,8 @@ class Goxens
 
         }catch (RequestException $e){
             $body = ($e->getResponse()->getBody());
-
             $errors = (json_decode((string)$body));
-
             $errors->statusCode = $e->getResponse()->getStatusCode();
-
             return $errors;
         }
 
@@ -68,36 +65,35 @@ class Goxens
 
 
     public function sendSms($apikey, $uid , $number, $sender , $msg){
-        $response = null;
 
-        try {
+        try{
+
             $endpoint = Constants::BASE_URL;
-
-            $response = $this->curl->request('POST', $endpoint . '/api/sendsms/'. $apikey.'/'. $uid, [
+            $uri =  $endpoint . '/api/sendsms/'. $apikey.'/'. $uid;
+            $response = $this->client->request('POST', $uri,[
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ],
-
                 'body' => json_encode([
-                    'expediteur' => $sender,
                     'numero' => $number,
+                    'expediteur' => $sender,
                     'message' => $msg,
-                ]),
+                ])
             ]);
 
-            return  $response->getBody()->getContents();
+            return $response->getStatusCode() . ' ' . $response->getReasonPhrase();
+
         }catch (RequestException $e){
             $body = ($e->getResponse()->getBody());
-
             $errors = (json_decode((string)$body));
-
             $errors->statusCode = $e->getResponse()->getStatusCode();
-
             return $errors;
         }
 
     }
+
+
 
 
     /**
